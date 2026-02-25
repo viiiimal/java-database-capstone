@@ -1,94 +1,187 @@
-/*this is the style sheet for the adminDashboard. */
+/* ===== GLOBAL RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* 
-Global Reset (`*`)
+/* ===== BASE HTML & BODY ===== */
+html,
+body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
 
-* Purpose: Ensure consistent layout across all browsers.
-* Properties:
+/* ===== MAIN LAYOUT WRAPPER ===== */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-  * `margin: 0` — removes default outer spacing from all elements.
-  * `padding: 0` — removes default inner spacing.
-  * `box-sizing: border-box` — ensures padding and borders are included within the total width/height of elements.
+/* ===== SECTION HEADING ===== */
+h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 50px;
+  color: #003e3e;
+}
 
-Base HTML & Body (`html, body`)
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
 
-* Purpose: Establish a full-height layout and apply a standard font across the page.
-* Properties:
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  * `height: 100%` — allows containers to stretch to the full viewport height.
-  * `font-family: Arial, sans-serif` — applies a clean, readable sans-serif font.
+  text-align: center;
 
-Main Layout Wrapper (`.wrapper`)
+  background-image: url("../images/defineRole/index.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
-* Purpose: Create a flexible, vertical layout that fills the entire screen.
-* Properties:
+/* ===== PRIMARY BUTTON ===== */
+button {
+  background-color: #A62B1F;
+  color: white;
+  border: none;
+  border-radius: 12px;
 
-  * `display: flex` — enables flexbox for layout control.
-  * `flex-direction: column` — stacks children vertically.
-  * `min-height: 100vh` — ensures the wrapper always covers full screen height.
+  padding: 10px 20px;
+  margin-top: 20px;
+  width: 200px;
 
-Section Heading (`h2`)
+  cursor: pointer;
+  font-size: 16px;
+}
 
-* Purpose: Style the headings prominently for section separation.
-* Properties:
+/* Hover — same color for branding */
+button:hover {
+  background-color: #A62B1F;
+}
 
-  * `font-size: 32px` — makes the heading large and noticeable.
-  * `font-weight: bold` — emphasizes text.
-  * `margin-bottom: 50px` — creates space below the heading.
-  * `color: #003e3e` — uses a strong teal for visual anchoring.
+/* ===== ADMIN SECONDARY BUTTON ===== */
+.adminBtn {
+  background-color: #f4f4f4;
+  color: #333;
 
-Main Content Section (`.main-content`)
+  font-weight: bold;
 
-* Purpose: Layout the main content with padding and a background image.
-* Properties:
+  width: 110px;
+  padding: 10px 0;
 
-  * `flex-grow: 1` — lets the content fill the available vertical space.
-  * `padding: 40px` — adds internal spacing around content.
-  * `display: flex` and `flex-direction: column` — organizes content in a vertical stack.
-  * `text-align: center` — centers the text.
-  * `background-image: url("index.png")` — sets a full-screen dashboard background.
-  * `background-size: cover` — ensures the image covers the whole section.
-  * `background-position: center` — centers the image.
-  * `background-repeat: no-repeat` — avoids tiling the image.
-  * `background-attachment: fixed` — fixes the image while scrolling.
+  border: none;
+  cursor: pointer;
+}
 
-Primary Button (`button`)
+/* Hover effect */
+.adminBtn:hover {
+  color: #A62B1F;
+}
 
-* Purpose: Design prominent, interactive buttons for main actions.
+/* ===== SEARCH BAR ===== */
+#searchBar {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
 
-* Properties:
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
-  * `background-color: #A62B1F` — sets a bold red color.
-  * `color: white` — makes text stand out.
-  * `border: none` — removes any outline/border.
-  * `border-radius: 12px` — creates rounded corners.
-  * `padding: 10px 20px` — gives space inside the button.
-  * `margin-top: 20px` — adds spacing above the button.
-  * `width: 200px` — ensures consistent button width.
-  * `cursor: pointer` — shows a hand icon on hover.
-  * `font-size: 16px` — makes the text readable.
+/* ===== FILTER DROPDOWNS ===== */
+.select-dropdown {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
-* On Hover:
+/* ===== CONTENT AREA ===== */
+#content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
 
-  * Retains the same red background to maintain branding.
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 
-Admin Button (`.adminBtn`)
+  background: rgba(0, 0, 0, 0.6);
 
-* Purpose: Provide a secondary button style for admin-specific actions.
+  display: none; /* Hidden by default */
 
-* Properties:
+  align-items: center;
+  justify-content: center;
+}
 
-  * `background-color: #f4f4f4` — uses a light grey background.
-  * `color: #333` — uses dark text for contrast.
-  * `font-weight: bold` — emphasizes text.
-  * `width: 110px` — smaller, compact width.
-  * `padding: 10px 0` — vertical padding only.
-  * `border: none` — clean look.
-  * `cursor: pointer` — indicates it's clickable.
+/* Modal Content */
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
 
-* On Hover**:
+  width: 400px;
+  max-width: 90%;
 
-   Changes text color to `#A62B1F` for brand consistency while keeping the background same.
+  position: relative;
+}
 
+/* Close Button */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
 
-*/
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #A62B1F;
+}
+
+/* ===== MODAL INPUTS ===== */
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #A62B1F;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+  #searchBar {
+    width: 90%;
+  }
+
+  #content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  button {
+    width: 90%;
+  }
+}
