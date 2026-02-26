@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.project.back_end.services.Service;
+import com.project.back_end.services.CommonService;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public class DashboardController {
 
     // 🔹 Inject the shared Service that validates tokens
     @Autowired
-    private Service service;
+    private CommonService service;
 
 
     // =========================
