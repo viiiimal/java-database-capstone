@@ -1,6 +1,7 @@
 package com.project.back_end.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,10 +13,8 @@ import java.util.Map;
 @Controller
 public class DashboardController {
 
-    // 🔹 Inject the shared Service that validates tokens
     @Autowired
     private CommonService service;
-
 
     // =========================
     // 👨‍💼 ADMIN DASHBOARD
@@ -23,15 +22,13 @@ public class DashboardController {
     @GetMapping("/adminDashboard/{token}")
     public String adminDashboard(@PathVariable String token) {
 
-        // Validate token for admin role
-        Map<String, Object> result = service.validateToken(token, "admin");
+        ResponseEntity<Map<String, String>> result =
+                service.validateToken(token, "admin");
 
-        // If result is empty → token valid
-        if (result.isEmpty()) {
-            return "admin/adminDashboard";   // Thymeleaf template path
+        if (result.getStatusCode().is2xxSuccessful()) {
+            return "admin/adminDashboard";
         }
 
-        // Invalid token → redirect to login page
         return "redirect:/";
     }
 
@@ -42,15 +39,13 @@ public class DashboardController {
     @GetMapping("/doctorDashboard/{token}")
     public String doctorDashboard(@PathVariable String token) {
 
-        // Validate token for doctor role
-        Map<String, Object> result = service.validateToken(token, "doctor");
+        ResponseEntity<Map<String, String>> result =
+                service.validateToken(token, "doctor");
 
-        // If valid → show dashboard
-        if (result.isEmpty()) {
+        if (result.getStatusCode().is2xxSuccessful()) {
             return "doctor/doctorDashboard";
         }
 
-        // Invalid → redirect to home/login
         return "redirect:/";
     }
 }

@@ -80,7 +80,7 @@ public class CommonService {
             }
 
             String token =
-                    tokenService.generateToken(admin.getUsername(), "admin");
+                    tokenService.generateToken(admin.getUsername());
 
             response.put("token", token);
             return ResponseEntity.ok(response);
@@ -196,9 +196,7 @@ public class CommonService {
 
         String token =
                 tokenService.generateToken(
-                        patient.getEmail(),
-                        "patient"
-                );
+                        patient.getEmail() );
 
         response.put("token", token);
         return ResponseEntity.ok(response);

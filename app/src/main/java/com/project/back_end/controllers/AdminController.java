@@ -1,6 +1,6 @@
 package com.project.back_end.controllers;
 
-import com.project.back_end.model.Admin;
+import com.project.back_end.models.Admin;
 import com.project.back_end.services.CommonService;
 
 import org.springframework.http.ResponseEntity;

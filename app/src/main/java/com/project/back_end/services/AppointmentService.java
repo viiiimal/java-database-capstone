@@ -76,69 +76,94 @@ public class AppointmentService {
     // 3. Cancel Appointment
     // -----------------------------
     @Transactional
-    public ResponseEntity<Map<String, String>> cancelAppointment(long id, String token) {
+public ResponseEntity<Map<String, String>> cancelAppointment(long id, String token) {
 
-        Map<String, String> response = new HashMap<>();
+    Map<String, String> response = new HashMap<>();
 
-        Optional<Appointment> appointmentOpt =
-                appointmentRepository.findById(id);
+    Optional<Appointment> appointmentOpt =
+            appointmentRepository.findById(id);
 
-        if (appointmentOpt.isEmpty()) {
-            response.put("message", "Appointment not found");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        Appointment appointment = appointmentOpt.get();
-
-        // Validate token owner (patient)
-        Long patientId = tokenService.extractId(token);
-
-        if (!appointment.getPatient().getId().equals(patientId)) {
-            response.put("message", "Unauthorized cancellation attempt");
-            return ResponseEntity.status(403).body(response);
-        }
-
-        appointmentRepository.delete(appointment);
-
-        response.put("message", "Appointment cancelled successfully");
-        return ResponseEntity.ok(response);
+    if (appointmentOpt.isEmpty()) {
+        response.put("message", "Appointment not found");
+        return ResponseEntity.badRequest().body(response);
     }
+
+    Appointment appointment = appointmentOpt.get();
+
+    // Token → email → patientId
+    String email = tokenService.extractIdentifier(token);
+
+    Long patientId =
+            patientRepository
+                    .findByEmail(email)
+                    .getId();
+
+    if (!appointment.getPatient().getId().equals(patientId)) {
+        response.put("message", "Unauthorized cancellation attempt");
+        return ResponseEntity.status(403).body(response);
+    }
+
+    appointmentRepository.delete(appointment);
+
+    response.put("message", "Appointment cancelled successfully");
+    return ResponseEntity.ok(response);
+}
 
     // -----------------------------
     // 4. Get Appointments for Doctor
     // -----------------------------
     @Transactional(readOnly = true)
-    public Map<String, Object> getAppointment(
-            String pname,
-            LocalDate date,
-            String token) {
+public Map<String, Object> getAppointment(
+        String pname,
+        LocalDate date,
+        String token) {
 
-        Map<String, Object> result = new HashMap<>();
+    Map<String, Object> result = new HashMap<>();
 
-        Long doctorId = tokenService.extractId(token);
+    // Token → email → doctorId
+    String email = tokenService.extractIdentifier(token);
 
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
+    Long doctorId =
+            doctorRepository
+                    .findByEmail(email)
+                    .getId();
 
-        List<Appointment> appointments;
+    LocalDateTime start = date.atStartOfDay();
+    LocalDateTime end = date.plusDays(1).atStartOfDay();
 
-        if (pname == null || pname.equalsIgnoreCase("null")) {
+    List<Appointment> appointments;
 
-            appointments =
-                    appointmentRepository
-                            .findByDoctorIdAndAppointmentTimeBetween(
-                                    doctorId, start, end);
+    if (pname == null || pname.equalsIgnoreCase("null")) {
 
-        } else {
+        appointments =
+                appointmentRepository
+                        .findByDoctorIdAndAppointmentTimeBetween(
+                                doctorId, start, end);
 
-            appointments =
-                    appointmentRepository
-                            .findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween(
-                                    doctorId, pname, start, end);
-        }
+    } else {
 
-        result.put("appointments", appointments);
-        return result;
+        appointments =
+                appointmentRepository
+                        .findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween(
+                                doctorId, pname, start, end);
     }
+
+    result.put("appointments", appointments);
+    return result;
+}
+@Transactional
+public void changeStatus(Long appointmentId, int status) {
+
+    Optional<Appointment> appointmentOpt =
+            appointmentRepository.findById(appointmentId);
+
+    if (appointmentOpt.isPresent()) {
+
+        Appointment appointment = appointmentOpt.get();
+        appointment.setStatus(status);
+
+        appointmentRepository.save(appointment);
+    }
+}    
 
 }
